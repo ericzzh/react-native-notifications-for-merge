@@ -81,13 +81,6 @@ export class NotificationsRoot {
   }
 
   /**
-   * cancelAllLocalNotifications
-  */
-  public cancelAllLocalNotifications() {
-    this.commands.cancelAllLocalNotifications();
-  }
-
-  /**
    * removeAllDeliveredNotifications
    */
   public removeAllDeliveredNotifications() {

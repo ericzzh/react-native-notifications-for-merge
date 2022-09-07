@@ -14,4 +14,5 @@ export declare class EventsRegistry {
     registerNotificationReceivedBackground(callback: (notification: Notification, completion: (response: NotificationBackgroundFetchResult) => void) => void): EmitterSubscription;
     registerNotificationOpened(callback: (notification: Notification, completion: () => void, actionResponse?: NotificationActionResponse) => void): EmitterSubscription;
     registerRemoteNotificationsRegistrationFailed(callback: (event: RegistrationError) => void): EmitterSubscription;
+    registerRemoteNotificationsRegistrationDenied(callback: () => void): EmitterSubscription;
 }

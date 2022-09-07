@@ -38,10 +38,6 @@ export declare class NotificationsRoot {
     */
     cancelLocalNotification(notificationId: number): void;
     /**
-     * cancelAllLocalNotifications
-    */
-    cancelAllLocalNotifications(): void;
-    /**
      * removeAllDeliveredNotifications
      */
     removeAllDeliveredNotifications(): void;

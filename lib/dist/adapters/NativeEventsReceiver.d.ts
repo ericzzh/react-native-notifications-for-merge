@@ -15,4 +15,5 @@ export declare class NativeEventsReceiver {
     registerPushKitNotificationReceived(callback: (event: object) => void): EmitterSubscription;
     registerNotificationOpened(callback: (notification: Notification, actionResponse?: NotificationActionResponse) => void): EmitterSubscription;
     registerRemoteNotificationsRegistrationFailed(callback: (event: RegistrationError) => void): EmitterSubscription;
+    registerRemoteNotificationsRegistrationDenied(callback: () => void): EmitterSubscription;
 }

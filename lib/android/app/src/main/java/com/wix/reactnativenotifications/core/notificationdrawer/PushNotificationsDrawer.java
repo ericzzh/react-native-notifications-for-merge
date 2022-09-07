@@ -69,12 +69,6 @@ public class PushNotificationsDrawer implements IPushNotificationsDrawer {
         notificationManager.cancelAll();
     }
 
-    @Override
-    public void onCancelAllLocalNotifications() {
-        onAllNotificationsClearRequest();
-        cancelAllScheduledNotifications();
-    }
-
     protected void cancelAllScheduledNotifications() {
         Log.i(LOGTAG, "Cancelling all scheduled notifications");
         ScheduleNotificationHelper helper = ScheduleNotificationHelper.getInstance(mContext);

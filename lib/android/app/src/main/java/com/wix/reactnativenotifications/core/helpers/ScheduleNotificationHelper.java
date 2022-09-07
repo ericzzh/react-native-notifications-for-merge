@@ -38,13 +38,15 @@ public class ScheduleNotificationHelper {
         Intent notificationIntent = new Intent(mContext, PushNotificationPublisher.class);
         notificationIntent.putExtra(ScheduleNotificationHelper.NOTIFICATION_ID, notificationId);
         notificationIntent.putExtras(bundle);
-        return PendingIntent.getBroadcast(mContext, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(mContext, notificationId, notificationIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void schedulePendingNotificationIntent(PendingIntent intent, long fireDate) {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, fireDate, intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, fireDate, intent);
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, fireDate, intent);

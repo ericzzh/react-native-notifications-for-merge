@@ -63,7 +63,7 @@ public class RNNotificationsModule extends ReactContextBaseJavaModule implements
     @Override
     public void onNewIntent(Intent intent) {
         if (NotificationIntentAdapter.canHandleIntent(intent)) {
-            Bundle notificationData = intent.getExtras();
+            Bundle notificationData = NotificationIntentAdapter.extractPendingNotificationDataFromIntent(intent);
             final IPushNotification notification = PushNotification.get(getReactApplicationContext().getApplicationContext(), notificationData);
             if (notification != null) {
                 notification.onOpened();
@@ -88,8 +88,10 @@ public class RNNotificationsModule extends ReactContextBaseJavaModule implements
                 return;
             }
 
-            InitialNotificationHolder.getInstance().clear();
             result = Arguments.fromBundle(notification.asBundle());
+            InitialNotificationHolder.getInstance().clear();
+        } catch (NullPointerException e) {
+            Log.e(LOGTAG, "getInitialNotification: Null pointer exception");
         } finally {
             promise.resolve(result);
         }
@@ -112,12 +114,6 @@ public class RNNotificationsModule extends ReactContextBaseJavaModule implements
     public void cancelLocalNotification(int notificationId) {
         IPushNotificationsDrawer notificationsDrawer = PushNotificationsDrawer.get(getReactApplicationContext().getApplicationContext());
         notificationsDrawer.onNotificationClearRequest(notificationId);
-    }
-
-    @ReactMethod
-    public void cancelAllLocalNotifications() {
-        IPushNotificationsDrawer notificationDrawer = PushNotificationsDrawer.get(getReactApplicationContext().getApplicationContext());
-        notificationDrawer.onCancelAllLocalNotifications();
     }
 
     @ReactMethod
