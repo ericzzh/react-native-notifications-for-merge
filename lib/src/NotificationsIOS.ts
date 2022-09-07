@@ -53,6 +53,13 @@ export class NotificationsIOS {
   }
 
   /**
+   * cancelAllLocalNotifications
+   */
+  public cancelAllLocalNotifications() {
+    this.commands.cancelAllLocalNotifications();
+  }
+
+  /**
    * checkPermissions
    */
   public checkPermissions() {
