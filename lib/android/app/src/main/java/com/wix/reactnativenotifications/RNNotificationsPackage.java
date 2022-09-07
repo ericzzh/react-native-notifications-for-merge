@@ -10,7 +10,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.google.firebase.FirebaseApp;
 import com.wix.reactnativenotifications.core.AppLifecycleFacade;
 import com.wix.reactnativenotifications.core.AppLifecycleFacadeHolder;
 import com.wix.reactnativenotifications.core.InitialNotificationHolder;
@@ -20,10 +19,12 @@ import com.wix.reactnativenotifications.core.notification.PushNotification;
 import com.wix.reactnativenotifications.core.notification.PushNotificationProps;
 import com.wix.reactnativenotifications.core.notificationdrawer.IPushNotificationsDrawer;
 import com.wix.reactnativenotifications.core.notificationdrawer.PushNotificationsDrawer;
+import com.wix.reactnativenotifications.fcm.PushyApp;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import me.pushy.sdk.Pushy;
 
 public class RNNotificationsPackage implements ReactPackage, AppLifecycleFacade.AppVisibilityListener, Application.ActivityLifecycleCallbacks {
 
@@ -31,7 +32,7 @@ public class RNNotificationsPackage implements ReactPackage, AppLifecycleFacade.
 
     public RNNotificationsPackage(Application application) {
         mApplication = application;
-        FirebaseApp.initializeApp(application.getApplicationContext());
+//        PushyApp.initializeApp(application.getApplicationContext());
 
         AppLifecycleFacadeHolder.get().addVisibilityListener(this);
         application.registerActivityLifecycleCallbacks(this);
@@ -63,6 +64,8 @@ public class RNNotificationsPackage implements ReactPackage, AppLifecycleFacade.
         notificationsDrawer.onNewActivity(activity);
 
         callOnOpenedIfNeed(activity);
+
+        Pushy.listen(mApplication.getApplicationContext());
     }
 
     @Override

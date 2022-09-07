@@ -7,12 +7,12 @@ import android.util.Log;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactContext;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.wix.reactnativenotifications.BuildConfig;
 import com.wix.reactnativenotifications.core.JsIOHelper;
 
 import static com.wix.reactnativenotifications.Defs.LOGTAG;
 import static com.wix.reactnativenotifications.Defs.TOKEN_RECEIVED_EVENT_NAME;
+import me.pushy.sdk.Pushy;
 
 public class FcmToken implements IFcmToken {
 
@@ -72,19 +72,18 @@ public class FcmToken implements IFcmToken {
     }
 
     protected void refreshToken() {
-        FirebaseMessaging.getInstance().getToken()
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    if (BuildConfig.DEBUG) Log.w(LOGTAG, "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-                sToken = task.getResult();
-                if (mAppContext instanceof IFcmTokenListenerApplication) {
-                    ((IFcmTokenListenerApplication) mAppContext).onNewFCMToken(sToken);
-                }
-                if (BuildConfig.DEBUG) Log.i(LOGTAG, "FCM has a new token" + "=" + sToken);
-                sendTokenToJS();
-            });
+        try {
+            sToken = Pushy.register(mAppContext);
+            if (mAppContext instanceof IFcmTokenListenerApplication) {
+                ((IFcmTokenListenerApplication) mAppContext).onNewFCMToken(sToken);
+            }
+            if (BuildConfig.DEBUG) Log.i(LOGTAG, "Pushy has a new token" + "=" + sToken);
+            sendTokenToJS();
+        }catch (Exception exc) {
+            if (BuildConfig.DEBUG) Log.w(LOGTAG, "Fetching Pushy registration token failed", exc);
+            return;
+        }
+
     }
 
     protected void sendTokenToJS() {
