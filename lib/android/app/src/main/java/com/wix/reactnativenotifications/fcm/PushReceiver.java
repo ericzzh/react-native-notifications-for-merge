@@ -19,6 +19,11 @@ public class PushReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         if(BuildConfig.DEBUG) Log.d(LOGTAG, "New message from Pushy: " + bundle);
 
+        //maybe in google fcm default value type is string, so we have to convert the boolean type to string
+        if(bundle.containsKey("is_crt_enabled")){
+            bundle.putString("is_crt_enabled", Boolean.toString(bundle.getBoolean("is_crt_enabled")));
+            if(BuildConfig.DEBUG) Log.d(LOGTAG, "is_crt_enabled: " + bundle.getString("is_crt_enabled"));
+        }
         try {
             final IPushNotification notification = PushNotification.get(context, bundle);
             notification.onReceived();
