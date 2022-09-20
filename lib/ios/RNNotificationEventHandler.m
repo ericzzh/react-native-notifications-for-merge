@@ -6,11 +6,13 @@
 
 @implementation RNNotificationEventHandler {
     RNNotificationsStore* _store;
+    NSDate* wakeTime;
 }
 
 - (instancetype)initWithStore:(RNNotificationsStore *)store {
     self = [super init];
     _store = store;
+    wakeTime = [[NSDate alloc] init];
     return self;
 }
 
@@ -31,6 +33,15 @@
 - (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(void))completionHandler {
     [_store setActionCompletionHandler:completionHandler withCompletionKey:response.notification.request.identifier];
     [RNEventEmitter sendEvent:RNNotificationOpened body:[RNNotificationParser parseNotificationResponse:response]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSDate* now = [[NSDate alloc] init];
+        double interval = [now timeIntervalSinceDate:self->wakeTime];
+        BOOL background = [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground;
+        NSDictionary* userInfo = response.notification.request.content.userInfo;
+        if (interval < 1.0 && !background) {
+            [self->_store setInitialNotification:userInfo];
+        }
+    });
 }
 
 - (void)didReceiveBackgroundNotification:(NSDictionary *)userInfo withCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
@@ -38,7 +49,7 @@
         NSString *uuid = [[NSUUID UUID] UUIDString];
         __block BOOL completionHandlerCalled = NO;
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [_store setBackgroundActionCompletionHandler:^(UIBackgroundFetchResult result) {
+        [self->_store setBackgroundActionCompletionHandler:^(UIBackgroundFetchResult result) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(result);
             });

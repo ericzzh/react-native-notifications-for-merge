@@ -55,18 +55,21 @@ public class PushNotificationsDrawer implements IPushNotificationsDrawer {
     public void onNotificationClearRequest(int id) {
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(id);
+        cancelScheduledNotification(String.valueOf(id));
     }
 
     @Override
     public void onNotificationClearRequest(String tag, int id) {
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(tag, id);
+        cancelScheduledNotification(String.valueOf(id));
     }
 
     @Override
     public void onAllNotificationsClearRequest() {
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+        cancelAllScheduledNotifications();
     }
 
     protected void cancelAllScheduledNotifications() {
@@ -82,6 +85,9 @@ public class PushNotificationsDrawer implements IPushNotificationsDrawer {
         Log.i(LOGTAG, "Cancelling scheduled notification: " + notificationId);
 
         ScheduleNotificationHelper helper = ScheduleNotificationHelper.getInstance(mContext);
+        if (!helper.getPreferencesKeys().contains(notificationId)) {
+            return;
+        }
 
         // Remove it from the alarm manger schedule
         Bundle bundle = new Bundle();
