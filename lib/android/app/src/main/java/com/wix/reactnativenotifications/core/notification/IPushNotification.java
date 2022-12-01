@@ -41,6 +41,5 @@ public interface IPushNotification {
      */
     int onPostScheduledRequest(Integer notificationId);
 
-
     PushNotificationProps asProps();
 }

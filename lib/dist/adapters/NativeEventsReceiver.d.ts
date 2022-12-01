@@ -6,7 +6,7 @@ import { NotificationFactory } from '../DTO/NotificationFactory';
 export declare class NativeEventsReceiver {
     private readonly notificationFactory;
     private emitter;
-    constructor(notificationFactory: NotificationFactory);
+    constructor(notificationFactory?: NotificationFactory);
     registerRemoteNotificationsRegistered(callback: (event: Registered) => void): EmitterSubscription;
     appNotificationSettingsLinked(callback: () => void): EmitterSubscription;
     registerPushKitRegistered(callback: (event: RegisteredPushKit) => void): EmitterSubscription;

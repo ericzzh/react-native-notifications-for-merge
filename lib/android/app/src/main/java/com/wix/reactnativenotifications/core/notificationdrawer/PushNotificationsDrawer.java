@@ -79,7 +79,7 @@ public class PushNotificationsDrawer implements IPushNotificationsDrawer {
         for (String notificationId : helper.getPreferencesKeys()) {
             cancelScheduledNotification(notificationId);
         }
-    }
+     }
 
     protected void cancelScheduledNotification(String notificationId) {
         Log.i(LOGTAG, "Cancelling scheduled notification: " + notificationId);
@@ -100,5 +100,5 @@ public class PushNotificationsDrawer implements IPushNotificationsDrawer {
         // Remove it from the notification center
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Integer.parseInt(notificationId));
-    }
+     }
 }
