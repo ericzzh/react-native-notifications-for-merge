@@ -19,8 +19,8 @@ public class NotificationIntentAdapter {
         return PendingIntent.getActivity(appContext, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
     }
 
-    public static boolean cannotHandleTrampolineActivity(Context appContext) {
-        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && appContext.getApplicationInfo().targetSdkVersion >= 31;
+    public static boolean canHandleTrampolineActivity(Context appContext) {
+        return android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R || appContext.getApplicationInfo().targetSdkVersion < 31;
     }
 
     public static Bundle extractPendingNotificationDataFromIntent(Intent intent) {

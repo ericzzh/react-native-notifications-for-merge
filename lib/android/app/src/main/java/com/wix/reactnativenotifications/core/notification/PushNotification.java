@@ -111,6 +111,7 @@ public class PushNotification implements IPushNotification {
         return postNotification(notificationId);
     }
 
+
     @Override
     public void onOpened() {
         digestNotification();
@@ -196,7 +197,7 @@ public class PushNotification implements IPushNotification {
         setUpIcon(notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
             String channelId = mNotificationProps.getChannelId();
             NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
             notification.setChannelId(channel != null ? channelId : DEFAULT_CHANNEL_ID);
@@ -218,7 +219,7 @@ public class PushNotification implements IPushNotification {
 
     private void setUpIconColor(NotificationCompat.Builder notification) {
         int colorResID = getAppResourceId("colorAccent", "color");
-        if (colorResID != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (colorResID != 0) {
             int color = mContext.getResources().getColor(colorResID);
             notification.setColor(color);
         }
@@ -255,7 +256,7 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void launchOrResumeApp() {
-        if (!NotificationIntentAdapter.cannotHandleTrampolineActivity(mContext)) {
+        if (NotificationIntentAdapter.canHandleTrampolineActivity(mContext)) {
             final Intent intent = mAppLaunchHelper.getLaunchIntent(mContext);
             mContext.startActivity(intent);
         }
